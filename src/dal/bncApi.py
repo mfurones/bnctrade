@@ -26,6 +26,45 @@ class bncApi:
         return _df
 
 
+    def createTradeOrder(self, symbol, side, quantity ):
+        return self.client.new_order(symbol=symbol, type='MARKET', side=side, quantity=quantity )
+
+    def createTradeOrderDryRun(self, symbol, side, quantity ):
+        _time = self.client.time()['serverTime']
+        _price = self.client.ticker_price(symbol=symbol)['price']
+        _cummulativeQuoteQty = float(_price) * float(quantity)
+        _toDryRun = {
+            "symbol": symbol,
+            "orderId": -1,
+            "orderListId": -1,
+            "clientOrderId": "dryRunOrder",
+            "transactTime": _time,
+            "price": "0.00000000",
+            "origQty": str(quantity),
+            "executedQty": str(quantity),
+            "cummulativeQuoteQty": str(_cummulativeQuoteQty),
+            "status": "FILLED",
+            "timeInForce": "GTC",
+            "type": "MARKET",
+            "side": side,
+            "fills": [
+                {
+                    "price": _price,
+                    "qty": str(quantity),
+                    "commission": str(quantity * 0.000075), # %0.075
+                    "commissionAsset": symbol[0:-4], # Remove USDT
+                    "tradeId": -1
+                }
+            ]
+        }
+        return _toDryRun
+
+
+
+
+
+
+
 
 
     

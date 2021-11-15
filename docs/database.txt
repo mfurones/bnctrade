@@ -1,0 +1,76 @@
+https://dbdiagram.io/d
+
+
+// Users & Profiles
+// Creating tables
+Table users {
+  id int [pk, increment] // auto-increment
+  user varchar [not null, unique]
+}
+
+Table profiles {
+  id int [pk, increment]
+  strategy varchar [not null]
+  symbol varchar [not null]
+  interval varchar [not null]
+  trade bool [not null]
+  invertcycles int [not null]
+  invertmoney int [not null]
+  user_id int [not null]
+ }
+
+// Creating references
+ref: users.id > profiles.user_id
+
+// Wallet
+
+// Orders
+
+Table tradeorderbuy {
+  id int [pk, increment]
+  symbol varchar
+  time int [not null]
+  timeh datetime [not null]
+  trade int [not null]
+  order int [not null]
+  amount float [not null]
+  ustd float [not null]
+  price float [not null]
+  tradesell int
+  profile_id int [not null]
+}
+
+Table tradeordersell {
+  id int [pk, increment]
+  symbol varchar
+  time int [not null]
+  timeh datetime [not null]
+  trade int [not null]
+  order int [not null]
+  amount float [not null]
+  ustd float [not null]
+  price float [not null]
+  tradebuy int [not null]
+  profile_id int [not null]
+}
+
+ref: profiles.id < tradeorderbuy.profile_id
+ref: profiles.id < tradeordersell.profile_id
+ref: tradeorderbuy.tradesell - tradeordersell.tradebuy
+
+
+// Fiat
+
+Table fiatorder {
+  id int [pk, increment]
+  time int [not null]
+  timeh datetime [not null]
+  order int [not null]
+  fiat varchar [not null]
+  amount float [not null]
+  ustd float [not null]
+  price float [not null]
+  user_id int [not null]
+}
+
+ref: users.id < fiatorder.user_id

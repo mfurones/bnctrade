@@ -4,6 +4,7 @@ import json
 import os
 import src.be.credential as credential
 import src.dal.bncApi as bncApi
+import src.dal.dbcnx as mysqlCNX
 import src.bll.formula as formula
 import pandas as pd
 import numpy as np
@@ -12,13 +13,13 @@ import numpy as np
 
 #%%
 
-tt = bncApi.bncApi()
+_ba = bncApi.bncApi()
 
-bb = tt.getKline(symbol='BNBUSDT', interval='30m',limit=500)
+_dsKline = _ba.getKline(symbol='BNBUSDT', interval='30m',limit=500)
 
 f = formula.formula()
 
-f.setBollinger(bb)
+f.setBollinger(_dsKline)
 
 
 #### como Plotear!
@@ -26,7 +27,19 @@ f.setBollinger(bb)
 # %% 
 
 file_name = "backtest01.csv"
-bb.to_csv (file_name, index = False, header=True)
+_dsKline.to_csv (file_name, index = False, header=True)
+
+
+# %%
+import src.be.credential as credential
+import src.dal.dbcnx as mysqlCNX
+import os
+
+
+
+sqlcnx = mysqlCNX.msqlCNX()
+
+
 
 
 # %%
