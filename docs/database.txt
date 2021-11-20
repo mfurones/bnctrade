@@ -26,13 +26,14 @@ ref: users.id > profiles.user_id
 
 // Orders
 
-Table tradeorderbuy {
+Table tradeordersbuy {
   id int [pk, increment]
-  symbol varchar
-  time int [not null]
+  symbol varchar [not null]
+  interv varchar [not null]
+  timed int [not null]
   timeh datetime [not null]
   trade int [not null]
-  order int [not null]
+  orderid int [not null]
   amount float [not null]
   ustd float [not null]
   price float [not null]
@@ -40,13 +41,14 @@ Table tradeorderbuy {
   profile_id int [not null]
 }
 
-Table tradeordersell {
+Table tradeorderssell {
   id int [pk, increment]
   symbol varchar
-  time int [not null]
+  interv varchar [not null]
+  timed int [not null]
   timeh datetime [not null]
   trade int [not null]
-  order int [not null]
+  orderid int [not null]
   amount float [not null]
   ustd float [not null]
   price float [not null]
@@ -54,18 +56,18 @@ Table tradeordersell {
   profile_id int [not null]
 }
 
-ref: profiles.id < tradeorderbuy.profile_id
-ref: profiles.id < tradeordersell.profile_id
-ref: tradeorderbuy.tradesell - tradeordersell.tradebuy
+ref: profiles.id < tradeordersbuy.profile_id
+ref: profiles.id < tradeorderssell.profile_id
+ref: tradeordersbuy.tradesell - tradeorderssell.tradebuy
 
 
 // Fiat
 
 Table fiatorder {
   id int [pk, increment]
-  time int [not null]
+  timed int [not null]
   timeh datetime [not null]
-  order int [not null]
+  orderid int [not null]
   fiat varchar [not null]
   amount float [not null]
   ustd float [not null]
@@ -74,3 +76,4 @@ Table fiatorder {
 }
 
 ref: users.id < fiatorder.user_id
+
