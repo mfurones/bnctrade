@@ -1,15 +1,21 @@
 
-DROP PROCEDURE createKlineRow;
-DROP PROCEDURE createKlineTable;
 
-CALL deleteTable('DIAUSDTklines');
-CALL createKlineTable('DIAUSDTklines');
+#### CRUD USERS
 
-CALL createKlineRow("DIAUSDTklines", "DIAUSDT", "15m", 1635263100000, "1.81500000", "1.82300000", "1.81000000", "1.81400000", "9094.70000000", 1635263999999, "16504.88940000", 97, "6610.90000000", "11998.26630000", "0");
-CALL createKlineRow("DIAUSDTklines", "tete", "15m", 1635263100000, "1.81500000", "1.82300000", "1.81000000", "1.81400000", "9094.70000000", 1635263999999, "16504.88940000", 97, "6610.90000000", "11998.26630000", "0");
+CALL sp_CRUD_users_create('users', 'mfurones02', 'mfurones@gmail.com', TRUE);
+CALL sp_CRUD_users_selectAll('users');
+CALL sp_CRUD_users_selectById('users', 1001);
+CALL sp_CRUD_users_update('users', 1002, 'furonet', 'mf@gmail.com', False);
 
-CALL createKlineRow("DIAUSDTklines", "DIAUSDT", "15m",1635964000000, "1.81600000", "1.82100000", "1.80000000", "1.81600000", "22638.90000000", 1635264899999,"41022.77740000", 131, "11392.80000000", "20674.52540000", "0");
-CALL createKlineRow("DIAUSDTklines", "soso", "15m",1635964000000, "1.81600000", "1.82100000", "1.80000000", "1.81600000", "22638.90000000", 1635264899999, "41022.77740000", 131, "11392.80000000", "20674.52540000", "0");
+
+#### CRUD Profiles
+
+CALL sp_CRUD_profile_create('profiles', 'bollinger', 'BTCUSDT', '15m', TRUE, 2, 15, 1001);
+CALL sp_CRUD_profile_selectAll('profiles');
+CALL sp_CRUD_users_selectById('profiles', 10001);
+CALL sp_CRUD_users_update('profiles', 10001, '3bar', 'BTCUSDT', '1h', FALSE, 2, 20, 1001);
+
+
 
 
 

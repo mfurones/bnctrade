@@ -7,28 +7,29 @@ USE bnctradedbdev;
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_users_create;
-CREATE PROCEDURE sp_CRUD_users_create(IN _tblname varchar(31), IN _user VARCHAR(63), IN _email VARCHAR(127), IN _uenable BOOL)
+CREATE PROCEDURE sp_CRUD_users_create(IN _tblname varchar(31), IN _user VARCHAR(63), IN _email VARCHAR(127), IN _uenable BOOLEAN)
 BEGIN
 SET @id = 0;
 SET @CountId = CONCAT('SELECT COUNT(*) INTO @id FROM ', _tblname, ';');
 PREPARE cid FROM @CountId;
 EXECUTE cid;
+deallocate PREPARE cid;
 IF @id > 0 THEN
 SET @MaxId = CONCAT('SELECT (MAX(id) + 1) INTO @id FROM ', _tblname, ';');
 PREPARE mid FROM @MaxId;
 EXECUTE mid;
 deallocate PREPARE mid;
 ELSE
-SET @id = 1000;
+SET @id = 1001;
 END IF;
 
 SET @user = _user;
 SET @email = _email;
 SET @uenable = _uenable;
 
-SET @qInsert = CONCAT('INSERT INTO ', _tblname, '(id, user, email, uneable) ');
-SET @qValues = CONCAT('VALUES(@id, @user, @email; @uenable);');
-SET @query = @qInsert + @qValues;
+SET @qInsert = CONCAT('INSERT INTO ', _tblname, '(id, user, email, uenable) ');
+SET @qValues = CONCAT('VALUES(@id, @user, @email, @uenable);');
+SET @query = CONCAT(@qInsert, @qValues);
 PREPARE query FROM @query;
 EXECUTE query;
 deallocate PREPARE query;
@@ -42,14 +43,12 @@ delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_users_selectAll;
 CREATE PROCEDURE sp_CRUD_users_selectAll(IN _tblname varchar(31))
 BEGIN
-
-SET @qSelect = CONCAT('SELECT id, user, email, uneable ');
+SET @qSelect = CONCAT('SELECT id, user, email, uenable ');
 SET @qFrom = CONCAT('FROM ', _tblname, ';');
-SET @query = @qSelect + @qFrom;
+SET @query = CONCAT(@qSelect, @qFrom);
 PREPARE query FROM @query;
 EXECUTE query;
 deallocate PREPARE query;
-
 END
 ||
 delimiter ;
@@ -60,17 +59,14 @@ delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_users_selectById;
 CREATE PROCEDURE sp_CRUD_users_selectById(IN _tblname varchar(31), IN _id DOUBLE)
 BEGIN
-
 SET @id = _id;
-
-SET @qSelect = CONCAT('SELECT id, user, email, uneable ');
+SET @qSelect = CONCAT('SELECT id, user, email, uenable ');
 SET @qFrom = CONCAT('FROM ', _tblname, ' ');
 SET @qWhere = CONCAT('WHERE id = @id;');
-SET @query = @qSelect + @qFrom + @qWhere;
+SET @query = CONCAT(@qSelect, @qFrom, @qWhere);
 PREPARE query FROM @query;
 EXECUTE query;
 deallocate PREPARE query;
-
 END
 ||
 delimiter ;
@@ -82,16 +78,14 @@ delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_users_update;
 CREATE PROCEDURE sp_CRUD_users_update(IN _tblname varchar(31), IN _id DOUBLE, IN _user VARCHAR(63), IN _email VARCHAR(127), IN _uenable BOOL)
 BEGIN
-
 SET @id = _id;
 SET @user = _user;
 SET @email = _email;
 SET @uenable = _uenable;
-
 SET @qTable = CONCAT('UPDATE ', _tblname, ' ');
 SET @qSet = CONCAT('SET user = @user, email = @email, uenable = @uenable ');
 SET @qWhere = CONCAT('WHERE id = @id;');
-SET @query = @qTable + @qSet + @qWhere;
+SET @query = CONCAT(@qTable, @qSet, @qWhere);
 PREPARE query FROM @query;
 EXECUTE query;
 deallocate PREPARE query;

@@ -24,7 +24,7 @@ SET @createTable = CONCAT('CREATE TABLE IF NOT EXISTS ',tblname ,' (
         id INT,
         user VARCHAR(63) NOT NULL UNIQUE,
         email VARCHAR(127) NOT NULL,
-        uenable BOOL NOT NULL;
+        uenable BOOLEAN NOT NULL,
         PRIMARY KEY (id)
         );');
 PREPARE dt FROM @dropTable;
@@ -51,8 +51,7 @@ SET @createTable = CONCAT('CREATE TABLE IF NOT EXISTS ',tblname ,' (
         invertcycles INT NOT NULL,
         invertmoney INT NOT NULL,
         user_id INT NOT NULL,
-        PRIMARY KEY (id),
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        PRIMARY KEY (id)
         );');
 PREPARE dt FROM @dropTable;
 PREPARE ct FROM @createTable;
@@ -80,8 +79,7 @@ SET @createTable = CONCAT('CREATE TABLE IF NOT EXISTS ',tblname ,' (
         ustd DOUBLE(10, 10) NOT NULL,
         price DOUBLE(10, 10) NOT NULL,
         user_id INT NOT NULL,
-        PRIMARY KEY (id),
-        FOREIGN KEY (user_id) REFERENCES users(id)
+        PRIMARY KEY (id)
         );');
 PREPARE dt FROM @dropTable;
 PREPARE ct FROM @createTable;
@@ -156,8 +154,8 @@ delimiter ;
 
 ### SP Calls
 
-call sp_tbl_create_users('users')
-call sp_tbl_create_profiles('profiles')
-call sp_tbl_create_fiatorders('fiatorders')
+call sp_tbl_create_users('users');
+call sp_tbl_create_profiles('profiles');
+call sp_tbl_create_fiatorders('fiatorders');
 call sp_tbl_create_tradeordersbuy('tradeordersbuy');
 call sp_tbl_create_tradeorderssell('tradeorderssell');
