@@ -8,7 +8,7 @@ USE bnctradedbdev;
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_tradeordersbuy_create;
-CREATE PROCEDURE sp_CRUD_tradeordersbuy_create(IN _tblname varchar(31), IN _symbol VARCHAR(15), IN _interv VARCHAR(7), IN _timed INT, IN _timeh DATETIME, IN _trade INT, IN _orderid INT, IN _amount FLOAT, IN _ustd FLOAT, IN _price FLOAT, IN _profile_id DOUBLE)
+CREATE PROCEDURE sp_CRUD_tradeordersbuy_create(IN _tblname varchar(31), IN _symbol VARCHAR(15), IN _interv VARCHAR(7), IN _timed DOUBLE, IN _timeh DATETIME, IN _trade DOUBLE, IN _orderid DOUBLE, IN _amount FLOAT, IN _ustd FLOAT, IN _price FLOAT, IN _profile_id DOUBLE)
 BEGIN
 SET @id = 0;
 SET @CountId = CONCAT('SELECT COUNT(*) INTO @id FROM ', _tblname, ';');
@@ -20,7 +20,7 @@ IF @id > 0 THEN
 	EXECUTE mid;
     deallocate PREPARE mid;
 ELSE
-	SET @id = 1000;
+	SET @id = 1;
 END IF;
 
 SET @symbol = _symbol;
@@ -34,12 +34,12 @@ SET @ustd = _ustd;
 SET @price = _price;
 SET @profile_id = _profile_id;
 
-SET @insetRecordInto = CONCAT('INSERT INTO ', _tblname, '(id, symbol, interv, timed, timeh, trade, orderid, amount, ustd, price, tradesell_id, profile_id) ');
-SET @insetRecordValues = CONCAT('VALUES(@id, @symbol, @interv, @timed, @timeh, @trade, @orderid, @amount, @ustd, @price, 0, @profile_id);');
-SET @insetRecord = @insetRecordInto + @insetRecordValues;
-PREPARE ir FROM @insetRecord;
-EXECUTE ir;
-deallocate PREPARE ir;
+SET @qInsert = CONCAT('INSERT INTO ', _tblname, '(id, symbol, interv, timed, timeh, trade, orderid, amount, ustd, price, tradesell_id, profile_id) ');
+SET @qValues = CONCAT('VALUES(@id, @symbol, @interv, @timed, @timeh, @trade, @orderid, @amount, @ustd, @price, 0, @profile_id);');
+SET @query = CONCAT(@qInsert, @qValues);
+PREPARE query FROM @query;
+EXECUTE query;
+deallocate PREPARE query;
 END
 ||
 delimiter ;
@@ -58,7 +58,7 @@ SET @tradesell_id = _tradesell_id;
 SET @qTable = CONCAT('UPDATE ', _tblname, ' ');
 SET @qSet = CONCAT('SET tradesell_id = @tradesell_id ');
 SET @qWhere = CONCAT('WHERE id = @id;');
-SET @query = @qTable + @qSet + @qWhere;
+SET @query = CONCAT(@qTable, @qSet, @qWhere);
 PREPARE query FROM @query;
 EXECUTE query;
 deallocate PREPARE query;
@@ -80,7 +80,7 @@ SET @interv = _interv;
 SET @qSelect = CONCAT('SELECT id, symbol, interv, timed, timeh, trade, orderid, amount, ustd, price, tradesell_id, profile_id ');
 SET @qFrom = CONCAT('FROM ', _tblname, ' ');
 SET @qWhere = CONCAT('WHERE (symbol = @symbol) AND (interv = @interv);');
-SET @query = @qSelect + @qFrom + @qWhere;
+SET @query = CONCAT(@qSelect, @qFrom, @qWhere);
 PREPARE query FROM @query;
 EXECUTE query;
 deallocate PREPARE query;
@@ -89,6 +89,7 @@ END
 delimiter ;
 
 # Select Order by ID
+CALL sp_CRUD_tradeordersbuy_selectById('tradeordersbuy', 3);
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_tradeordersbuy_selectById;
@@ -96,12 +97,10 @@ CREATE PROCEDURE sp_CRUD_tradeordersbuy_selectById(IN _tblname varchar(31), IN _
 BEGIN
 
 SET @id = _id;
-SET @tradesell_id = _tradesell_id;
-
 SET @qSelect = CONCAT('SELECT id, symbol, interv, timed, timeh, trade, orderid, amount, ustd, price, tradesell_id, profile_id ');
 SET @qFrom = CONCAT('FROM ', _tblname, ' ');
 SET @qWhere = CONCAT('WHERE id = @id;');
-SET @query = @qSelect + @qFrom + @qWhere;
+SET @query = CONCAT(@qSelect, @qFrom, @qWhere);
 PREPARE query FROM @query;
 EXECUTE query;
 deallocate PREPARE query;
@@ -116,7 +115,7 @@ delimiter ;
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_tradeorderssell_create;
-CREATE PROCEDURE sp_CRUD_tradeorderssell_create(IN _tblname varchar(31), IN _symbol VARCHAR(15), IN _interv VARCHAR(7), IN _timed INT, IN _timeh DATETIME, IN _trade INT, IN _orderid INT, IN _amount FLOAT, IN _ustd FLOAT, IN _price FLOAT, IN _tradebuy_id DOUBLE, IN _profile_id DOUBLE)
+CREATE PROCEDURE sp_CRUD_tradeorderssell_create(IN _tblname varchar(31), IN _symbol VARCHAR(15), IN _interv VARCHAR(7), IN _timed DOUBLE, IN _timeh DATETIME, IN _trade DOUBLE, IN _orderid DOUBLE, IN _amount FLOAT, IN _ustd FLOAT, IN _price FLOAT, IN _tradebuy_id DOUBLE, IN _profile_id DOUBLE)
 BEGIN
 SET @id = 0;
 SET @CountId = CONCAT('SELECT COUNT(*) INTO @id FROM ', _tblname, ';');
@@ -143,12 +142,12 @@ SET @price = _price;
 SET @tradebuy_id = _tradebuy_id;
 SET @profile_id = _profile_id;
 
-SET @insetRecordInto = CONCAT('INSERT INTO ', _tblname, '(id, symbol, interv, timed, timeh, trade, orderid, amount, ustd, price, tradebuy_id, profile_id) ');
-SET @insetRecordValues = CONCAT('VALUES(@id, @symbol, @interv, @timed, @timeh, @trade, @orderid, @amount, @ustd, @price, @tradebuy_id, @profile_id);');
-SET @insetRecord = @insetRecordInto + @insetRecordValues;
-PREPARE ir FROM @insetRecord;
-EXECUTE ir;
-deallocate PREPARE ir;
+SET @qInsert = CONCAT('INSERT INTO ', _tblname, '(id, symbol, interv, timed, timeh, trade, orderid, amount, ustd, price, tradebuy_id, profile_id) ');
+SET @qValues = CONCAT('VALUES(@id, @symbol, @interv, @timed, @timeh, @trade, @orderid, @amount, @ustd, @price, @tradebuy_id, @profile_id);');
+SET @query = CONCAT(@qInsert, @qValues);
+PREPARE query FROM @query;
+EXECUTE query;
+deallocate PREPARE query;
 END
 ||
 delimiter ;

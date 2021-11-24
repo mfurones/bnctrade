@@ -31,6 +31,8 @@ PREPARE dt FROM @dropTable;
 PREPARE ct FROM @createTable;
 EXECUTE dt;
 EXECUTE ct;
+deallocate PREPARE dt;
+deallocate PREPARE ct;
 END
 ||
 delimiter ;
@@ -57,6 +59,8 @@ PREPARE dt FROM @dropTable;
 PREPARE ct FROM @createTable;
 EXECUTE dt;
 EXECUTE ct;
+deallocate PREPARE dt;
+deallocate PREPARE ct;
 END
 ||
 delimiter ;
@@ -85,6 +89,8 @@ PREPARE dt FROM @dropTable;
 PREPARE ct FROM @createTable;
 EXECUTE dt;
 EXECUTE ct;
+deallocate PREPARE dt;
+deallocate PREPARE ct;
 END
 ||
 delimiter ;
@@ -101,21 +107,23 @@ SET @createTable = CONCAT('CREATE TABLE IF NOT EXISTS ',tblname ,' (
         id DOUBLE,
         symbol VARCHAR(15) NOT NULL,
         interv VARCHAR(7) NOT NULL,
-        timed INT NOT NULL,
+        timed DOUBLE NOT NULL,
         timeh DATETIME NOT NULL,
-        trade INT NOT NULL,
-        orderid INT NOT NULL,
+        trade DOUBLE NOT NULL,
+        orderid DOUBLE NOT NULL,
         amount FLOAT NOT NULL,
         ustd FLOAT NOT NULL,
         price FLOAT NOT NULL,
-        tradesell_id INT,
-        profile_id INT NOT NULL,
+        tradesell_id DOUBLE,
+        profile_id DOUBLE NOT NULL,
         PRIMARY KEY (id)
         );');
 PREPARE dt FROM @dropTable;
 PREPARE ct FROM @createTable;
 EXECUTE dt;
 EXECUTE ct;
+deallocate PREPARE dt;
+deallocate PREPARE ct;
 END
 ||
 delimiter ;
@@ -132,21 +140,23 @@ SET @createTable = CONCAT('CREATE TABLE IF NOT EXISTS ',tblname ,' (
         id DOUBLE,
         symbol VARCHAR(15) NOT NULL,
         interv VARCHAR(7) NOT NULL,
-        timed INT NOT NULL,
+        timed DOUBLE NOT NULL,
         timeh DATETIME NOT NULL,
-        trade INT NOT NULL,
-        orderid INT NOT NULL,
+        trade DOUBLE NOT NULL,
+        orderid DOUBLE NOT NULL,
         amount FLOAT NOT NULL,
         ustd FLOAT NOT NULL,
         price FLOAT NOT NULL,
-        tradebuy_id INT,
-        profile_id INT NOT NULL,
+        tradebuy_id DOUBLE,
+        profile_id DOUBLE NOT NULL,
         PRIMARY KEY (id)
         );');
 PREPARE dt FROM @dropTable;
 PREPARE ct FROM @createTable;
 EXECUTE dt;
 EXECUTE ct;
+deallocate PREPARE dt;
+deallocate PREPARE ct;
 END
 ||
 delimiter ;
@@ -159,3 +169,4 @@ call sp_tbl_create_profiles('profiles');
 call sp_tbl_create_fiatorders('fiatorders');
 call sp_tbl_create_tradeordersbuy('tradeordersbuy');
 call sp_tbl_create_tradeorderssell('tradeorderssell');
+
