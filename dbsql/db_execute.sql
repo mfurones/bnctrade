@@ -12,9 +12,9 @@ CALL sp_CRUD_users_update('users', 1002, 'furonet', 'mf@gmail.com', False);
 
 CALL sp_CRUD_profile_create('profiles', 'bollinger', 'BTCUSDT', '15m', TRUE, 2, 15, 1001);
 CALL sp_CRUD_profile_selectAll('profiles');
-CALL sp_CRUD_users_selectById('profiles', 10001);
-CALL sp_CRUD_users_update('profiles', 10001, '3bar', 'BTCUSDT', '1h', FALSE, 2, 20, 1001);
-
+CALL sp_CRUD_profiles_selectById('profiles', 10001);
+CALL sp_CRUD_profiles_update('profiles', 10001, '3bar', 'BTCUSDT', '1h', FALSE, 2, 20, 1001);
+CALL sp_CRUD_profiles_selectByProdIjUsersEnable('profiles', 'users');
 
 #### CRUD tradeordersbuy
 

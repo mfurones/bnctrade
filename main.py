@@ -1,5 +1,6 @@
 # %%
 from binance.spot import Spot
+import datetime
 import json
 import os
 import src.be.credential as credential
@@ -31,15 +32,7 @@ _dsKline.to_csv (file_name, index = False, header=True)
 
 
 # %%
-import src.be.credential as credential
-import src.dal.dbcnx as mysqlCNX
-import os
-
-
-
-sqlcnx = mysqlCNX.msqlCNX()
 
 
 
 
-# %%

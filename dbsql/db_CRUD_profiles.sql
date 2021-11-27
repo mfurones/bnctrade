@@ -58,8 +58,8 @@ delimiter ;
 # Select User by id
 
 delimiter ||
-DROP PROCEDURE IF EXISTS sp_CRUD_users_selectById;
-CREATE PROCEDURE sp_CRUD_users_selectById(IN _tblname varchar(31), IN _id DOUBLE)
+DROP PROCEDURE IF EXISTS sp_CRUD_profiles_selectById;
+CREATE PROCEDURE sp_CRUD_profiles_selectById(IN _tblname varchar(31), IN _id DOUBLE)
 BEGIN
 SET @id = _id;
 SET @qSelect = CONCAT('SELECT id, strategy, symbol, interv, tradeenable, invertcycles, invertmoney, user_id ');
@@ -75,11 +75,10 @@ delimiter ;
 
 
 # Update User
-CALL sp_CRUD_users_update('profiles', 10001, '3bar', 'BTCUSDT', '1h', FALSE, 2, 20, 1001);
 
 delimiter ||
-DROP PROCEDURE IF EXISTS sp_CRUD_users_update;
-CREATE PROCEDURE sp_CRUD_users_update(IN _tblname varchar(31), IN _id DOUBLE, IN _strategy VARCHAR(63), IN _symbol VARCHAR(63), IN _interv VARCHAR(7), IN _tradeenable BOOL, IN _invertcycles INT, IN _invertmoney INT, IN _user_id DOUBLE)
+DROP PROCEDURE IF EXISTS sp_CRUD_profiles_update;
+CREATE PROCEDURE sp_CRUD_profiles_update(IN _tblname varchar(31), IN _id DOUBLE, IN _strategy VARCHAR(63), IN _symbol VARCHAR(63), IN _interv VARCHAR(7), IN _tradeenable BOOL, IN _invertcycles INT, IN _invertmoney INT, IN _user_id DOUBLE)
 BEGIN
 SET @id = _id;
 SET @strategy = _strategy;
@@ -100,3 +99,22 @@ END
 ||
 delimiter ;
 
+
+# Select User by id
+
+delimiter ||
+DROP PROCEDURE IF EXISTS sp_CRUD_profiles_selectByProdIjUsersEnable;
+CREATE PROCEDURE sp_CRUD_profiles_selectByProdIjUsersEnable(IN _tblname1 varchar(31),IN _tblname2 varchar(31))
+BEGIN
+SET @qSelect = CONCAT('SELECT tb1.id, tb1.strategy, tb1.symbol, tb1.interv, tb1.tradeenable, tb1.invertcycles, tb1.invertmoney, tb1.user_id, tb2.user, tb2.email, tb2.uenable ');
+SET @qFrom = CONCAT('FROM ', _tblname1, ' AS tb1 ');
+SET @qInnerJoin = CONCAT('INNER JOIN ', _tblname2, ' AS tb2 ');
+SET @qOn = CONCAT('ON tb1.user_id = tb2.id ');
+SET @qWhere = CONCAT('WHERE tb2.uenable = TRUE;');
+SET @query = CONCAT(@qSelect, @qFrom, @qInnerJoin, @qOn, @qWhere);
+PREPARE query FROM @query;
+EXECUTE query;
+deallocate PREPARE query;
+END
+||
+delimiter ;
