@@ -22,6 +22,7 @@ CALL sp_CRUD_tradeordersbuy_create('tradeordersbuy', 'BTCUSDT', '15m', 163772124
 CALL sp_CRUD_tradeordersbuy_create('tradeordersbuy', 'ETHUSDT', '1h', 1637721249372, '2021-11-24 16:03:50', 11111, 8379269410, 0.00024, 13.5960, 56650, 10002 );
 CALL sp_CRUD_tradeordersbuy_update('tradeordersbuy', 2, 8386268799);
 CALL sp_CRUD_tradeordersbuy_selectBySymbolInterv('tradeordersbuy', 'BTCUSDT', '15m');
+CALL sp_CRUD_tradeordersbuy_selectBySymbolIntervNoSells('tradeordersbuy', 'BTCUSDT', '15m');
 CALL sp_CRUD_tradeordersbuy_selectById('tradeordersbuy', 3);
 CALL sp_CRUD_tradeorderssell_create('tradeorderssell', 'BTCUSDT', '15m', 1637769089734, '2021-11-24 15:51:30', 11111, 8386268799, 0.00024, 13.6651, 56937.79, 8386430197, 10002 );
 CALL sp_CRUD_tradeorderssell_create('tradeorderssell', 'ETHUSDT', '1h', 1637769089734, '2021-11-24 15:51:30', 11111, 8386268799, 0.00024, 13.6651, 56937.79, 8386430197, 10002 );

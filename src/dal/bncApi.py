@@ -1,16 +1,22 @@
 from binance.spot import Spot
 import src.be.credential as credential
-import src.be.statistic as statistic
+from src.be.apiBodys import syintst
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 class bncApi:
     def __init__(self):
         _cred = credential.bncCred()
         self.client = Spot(key=_cred.apiKey, secret=_cred.secret)
 
-    def getKline(self, symbol, interval, startTime=None, endTime=None, limit=1):
-        _kl = self.client.klines(symbol=symbol, interval=interval, limit=limit, startTime=startTime, endTime=endTime)
+    def getTime(self):
+        return {
+            "time": datetime.fromtimestamp(int(self.client.time()["serverTime"])/1000.0).strftime("%Y-%m-%d %H:%M:%S")
+        }
+
+    def getKline(self, syintst: syintst, startTime=None, endTime=None, limit=1, filled=False):
+        _kl = self.client.klines(symbol=syintst.symbol, interval=syintst.interv, limit=limit, startTime=startTime, endTime=endTime)
         _klnp = np.array(_kl)
         # Define colums & types
         cols = ['OpenTime', 'OpenPrice', 'High', 'Low', 'ClosePrice', 'Volume', 'CloseTime', 'QAV', 'trades', 'TBBAV', 'TBQAV', 'Ignore']

@@ -88,8 +88,27 @@ END
 ||
 delimiter ;
 
+
+# Select Order by Symbol, Interv, No Sells
+
+delimiter ||
+DROP PROCEDURE IF EXISTS sp_CRUD_tradeordersbuy_selectBySymbolIntervNoSells;
+CREATE PROCEDURE sp_CRUD_tradeordersbuy_selectBySymbolIntervNoSells(IN _tblname varchar(31))
+BEGIN
+
+SET @qSelect = CONCAT('SELECT id, symbol, interv, timed, timeh, trade, orderid, amount, ustd, price, tradesell_id, profile_id ');
+SET @qFrom = CONCAT('FROM ', _tblname, ' ');
+SET @qWhere = CONCAT('WHERE tradesell_id <= 0;');
+SET @query = CONCAT(@qSelect, @qFrom, @qWhere);
+PREPARE query FROM @query;
+EXECUTE query;
+deallocate PREPARE query;
+END
+||
+delimiter ;
+
+
 # Select Order by ID
-CALL sp_CRUD_tradeordersbuy_selectById('tradeordersbuy', 3);
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_tradeordersbuy_selectById;

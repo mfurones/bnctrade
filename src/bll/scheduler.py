@@ -1,30 +1,34 @@
-import src.dal.bncApi as bncApi
-import src.dal.mapperdbcnx as mapperdbcnx
+
+from src.be.environments import srvStrategies
+from src.be.apiBodys import syintst
+from src.dal.bncApi import bncApi
+from src.dal.mapperdbcnx import mapperdbcnx
+import requests
 
 class scheduler:
-    def __init__(self):
-        self.bncApi = bncApi.bncApi()
-        self.mapperdbcnx = mapperdbcnx.mapperdbcnx()
+    def __init__(self, objService: srvStrategies):
+        self.bncApi = bncApi()
+        self.mapperdbcnx = mapperdbcnx()
+        self.strategicURL = "http://{}:{}/strategies".format(objService.service, objService.port)
     def run(self):
         ## Get all profiles
         _prof = self.mapperdbcnx.mGetProfiles()
-        for sy in _prof['symbol'].unique():
-            ## Filter by symbol
-            _df1 = _prof.query("symbol==@sy")
-            for i in _df1['interv'].unique():
-                ## Get Klines by symbol
-                self.klines = self.bncApi.getKline(symbol=sy, interval=i,limit=50)
-                ## Filter by symbol & interv
-                _df2 = _prof.query("symbol==@sy" and "interv==@i")
+        print(_prof)
+        for index, data in _prof.groupby(["symbol", "interv", "strategy"]):
+            _param = syintst(symbol=index[0], interv=index[1], strategy=index[2])
+            _header = {"Content-Type": "application/json"}
+            _url = "{}/{}".format(self.strategicURL, index[2])
+            try:
+                _rr = requests.request(method="POST", url=_url, json=_param.dict(), headers=_header)
+            except:
+                print("Failed calling {}".format(_url))
 
-                for st in _df2['strategy'].unique():
-                    ## Filter by symbol & interv & strategy
-                    _df3 = _prof.query("symbol==@sy" and "interv==@i" and "strategy==@st")
-
-                    ### Ejecutar la estrategia
-       
+            
 
 
 
 
-        
+
+
+
+

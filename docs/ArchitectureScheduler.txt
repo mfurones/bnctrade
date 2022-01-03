@@ -1,0 +1,35 @@
+https://sequencediagram.org/
+
+title Scheduler Architecture
+
+control Cron
+participant scheduler.py
+rategies
+participant "src.bll.scheduler.scheduler\nscheduler" as scheduler
+participant "src.dal.mapperdbcnx.mapperdbcnx\nmapperdbcnx" as mapperdbcnx
+participant "src.dal.dbcnx.dbcnx\nmsqlCNX" as msqlCNX
+participant strategies.py
+database Database
+
+Cron->scheduler.py: scheduler.py
+
+activate scheduler.py
+scheduler.py->scheduler: run()
+activate scheduler
+scheduler->mapperdbcnx: mGetProfiles()
+activate mapperdbcnx
+mapperdbcnx->msqlCNX: spGet('sp_CRUD_profiles_selectByProdIjUsersEnable',\n ['profiles', 'users'])
+activate msqlCNX
+msqlCNX->Database: callproc()
+msqlCNX<--Database: stored_results()
+mapperdbcnx<--msqlCNX: [dataframe]df(id, strategy, symbol, interv, tradeenable,\n invertcycles, invertmoney, user_id, user, email, uenable)
+deactivateafter msqlCNX 
+scheduler<--mapperdbcnx: [dataframe]df
+deactivateafter mapperdbcnx
+group iterate df [for index, data in _prof.groupby(["symbol", "interv", "strategy")]
+scheduler->strategies.py :request.post(/strategies/{strategies})
+scheduler<--strategies.py : 200
+end
+scheduler.py<--scheduler:
+deactivateafter scheduler
+deactivateafter scheduler.py

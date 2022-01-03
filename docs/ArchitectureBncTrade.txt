@@ -1,0 +1,35 @@
+https://sequencediagram.org/
+
+title BNC Trade Hi Level
+
+control Cron
+participant scheduler
+participant strategies
+participant orders
+database Database
+fontawesome5brands f15a Binance Api
+
+Cron->scheduler: scheduler.py
+
+activate scheduler
+scheduler->Database: mGetProfiles()
+scheduler<--Database: n(id, strategy, symbol, interv, tradeenable, invertcycles, invertmoney, user_id, user, email, uenable)
+scheduler->strategies: request.post(syintst)
+deactivateafter scheduler
+
+activate strategies
+strategies->Binance Api: getKline(syintst=syintst,limit=20)
+strategies<--Binance Api: [dataframe]kline
+strategies->Binance Api: getPrice()
+strategies<--Binance Api: [int]price
+strategies->orders: request.post(syintst, id)
+deactivateafter strategies
+
+activate orders
+orders->Database: mGetProfileId(prof)
+orders<--Database: 1(id, strategy, symbol, interv, tradeenable, invertcycles, invertmoney, user_id, user, email, uenable)
+orders->Binance Api: createTradeOrder(symbol=symbol, type='MARKET', side=side, quantity=quantity)
+orders<--Binance Api: [json]order
+orders->Database: mSetOrder([json]order, prof)
+orders<--Database: ACK
+deactivateafter orders

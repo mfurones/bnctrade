@@ -39,7 +39,7 @@ END
 ||
 delimiter ;
 
-# Select User All
+# Select Profiles All
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_profile_selectAll;
@@ -55,7 +55,7 @@ END
 ||
 delimiter ;
 
-# Select User by id
+# Select Profile by id
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_profiles_selectById;
@@ -74,7 +74,7 @@ END
 delimiter ;
 
 
-# Update User
+# Update Profile
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_profiles_update;
@@ -100,7 +100,7 @@ END
 delimiter ;
 
 
-# Select User by id
+# Select Profiles Enables
 
 delimiter ||
 DROP PROCEDURE IF EXISTS sp_CRUD_profiles_selectByProdIjUsersEnable;

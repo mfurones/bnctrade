@@ -1,0 +1,54 @@
+title Strategy Architecture
+
+
+participant scheduler.py
+participant strategies.py
+participant "src.bll.strategies\nstrategies" as strategies
+participant "src.dal.mapperdbcnx.mapperdbcnx\nmapperdbcnx" as mapperdbcnx
+participant "src.dal.dbcnx.dbcnx\nmsqlCNX" as msqlCNX
+participant "src.dal.bncApi\nbncApi" as bncApi
+database Database
+fontawesome5brands f15a "Binance Api" as bapi
+participant orders.py
+
+
+
+scheduler.py->strategies.py :request.post(/strategies/{strategy})
+
+activate strategies.py
+strategies.py->strategies: strategies.{stry}(syintst)
+activate strategies
+strategies->bncApi: getKline(syintst, limit)
+activate bncApi
+bncApi->bapi: klines(symbol, interval, limit)
+bncApi<--bapi: json(kline)
+strategies<--bncApi: [dataframe]_df
+deactivate bncApi
+
+strategies->strategies: Logica de la estrategia
+
+alt Buy Long
+strategies->mapperdbcnx: mGetProfilesToBuy(syintst)
+activate mapperdbcnx
+mapperdbcnx->msqlCNX: spGet('sp_CRUD_profiles_selectEnablesBuy',\n ['profiles', 'users', syintst.symbol, syintst.interv, syintst.strategy])
+activate msqlCNX
+mapperdbcnx<--msqlCNX: [dataframe]_df=(id, strategy, symbol, interv)
+strategies<--mapperdbcnx: [dataframe]_df
+deactivate mapperdbcnx
+
+loop index, data in _prof
+strategies->orders.py: request.post(orders/buylong, prof)
+strategies<--orders.py: 200
+end
+
+else Sell Long
+
+end 
+
+
+
+
+strategies.py<--strategies:JSONResponse(200)
+deactivate strategies
+scheduler.py<--strategies.py : 200
+deactivate strategies.py
